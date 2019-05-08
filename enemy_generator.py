@@ -74,13 +74,54 @@ def creating_enemy_dic ():
 
 def save_enemy_file (enemy_dic):
     
+
+    
+    
     current_dir = os.getcwd()
+    folder_path = current_dir + '/enemies'
+    if os.path.exists(folder_path) != True:
+        os.mkdir(folder_path)
+        
     file_name = current_dir + '/enemies/' + enemy_dic['enemy_name']
     output_file_object = open(file_name, 'wb')
     pickle.dump(enemy_dic, output_file_object)
     output_file_object.close()
+    valid_answer = False
+    while valid_answer != True:
+    
+        print("Is the enemy and easy fight or a normal fight?")
+        print("(A) Easy Difficulty")
+        print("(B) Normal Difficulty")
+        difficulty_choice = input('Your choice: ')
+        if difficulty_choice.upper() == 'A' or difficulty_choice.upper() == 'B':
+            valid_answer = True
+        else:
+            valid_answer = False
+            print('Invalid Choice, try again!')
+    
+    if difficulty_choice.upper() == 'A':
+        save_name_to_file(enemy_dic['enemy_name'], 'easy_enemies_list')
+        
+    elif difficulty_choice.upper() == 'B': 
+        save_name_to_file(enemy_dic['enemy_name'], 'normal_enemies_list')
+    
     return
 
+def save_name_to_file(enemy_name, file_name):
+    current_dir = os.getcwd()
+    file_path = current_dir + '/enemies/' + file_name + '.txt.'
+    try:
+        
+        file_object = open(file_path, 'a')
+        
+    except IOError:
+        os.makedirs(file_path)
+        
+    name_to_save = enemy_name + '\n'
+    file_object.write(name_to_save)
+    
+    return      
+        
 
 
 def main():

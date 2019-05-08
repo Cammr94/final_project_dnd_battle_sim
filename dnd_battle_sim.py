@@ -62,10 +62,11 @@ def character_selection():
     print("(B) Load Previous Character", end = '')
     char_choice = input("Choose: ")
     
-    valid_answer = False
+    
     
 
-#Will make sure that the user enters in a valid choice to progress through.
+#Will make sure that the user enters in a valid choice to progress through.   
+    valid_answer = False
     while valid_answer != True:
         if char_choice.isalpha() == False:
             input("Uhh, pardon me? Could you repeat that? ~Invalid Choice~")
@@ -84,10 +85,11 @@ def character_selection():
 
 
     if char_choice.upper() == 'A':
-        player_dic = create_chaaracter()
+        player_dic = create_character()
         
     elif char_choice.upper() == 'B':
         player_dic = load_character()
+            
     
     return player_dic
     
@@ -108,7 +110,7 @@ program is housed!
 '''
 
 
-def create_chaaracter():
+def create_character():
     player_dic = {}
     input("Ahhh a newcomer!\nWelcome welcome!")
     input("Now...Tell me about your self")
@@ -193,6 +195,48 @@ def save_player_char(player_dic):
     file_object.close()
     
     return            
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def load_character():
+    input("Oh its you! Welcome back...")
+    input("...uh, remind me...")
+    current_dir = os.getcwd() #import os #https://stackoverflow.com/questions/3430372/how-to-get-full-path-of-current-files-directory-in-python SOURCE
+    char_found = False
+    while char_found != True:
+        char_name = input("...who are you?\nYour Name: ")
+        
+        
+        char_name_file = char_name.replace(' ', '_')
+        file_path = current_dir + '/characters/' + char_name_file
+        
+        try:
+            char_file_object = open(file_path, 'rb')
+        except IOError:
+            input("Uhh, I've never heard of you stranger? ~Character Not Found~")
+        else:
+            char_found = True
+            
+    player_dic = pickle.load(char_file_object)
+    return player_dic
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#SOURCE: https://tecadmin.net/python-check-file-directory-exists/
+    
+def check_folders():
+    current_dir = os.getcwd()
+    characters_file_path = current_dir + '/characters/'
+    if os.path.exists(characters_file_path) != True:
+        os.makedirs(characters_file_path)
+    
+    
+    enemies_file_path = current_dir + '/enemies/'
+    if os.path.exists(enemies_file_path) != True:
+        os.makedirs(enemies_file_path)
+        
+    return
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #Will roll and get a score for an ability and return that score
@@ -778,75 +822,83 @@ def rogue_create (player_dic):
 
 #~~~~~~~~~~~~~~~~~~~~~~END OF CLASS FUNCTIONS~~~~~~~~~~~~~~
 
-def load_character():
-    input("Oh its you! Welcome back...")
-    input("...uh, remind me...")
-    current_dir = os.getcwd() #import os #https://stackoverflow.com/questions/3430372/how-to-get-full-path-of-current-files-directory-in-python SOURCE
-    char_found = False
-    while char_found != True:
-        char_name = input("...who are you?\nYour Name: ")
-        char_name_file = char_name.replace(' ', '_')
-        file_path = current_dir + '/characters/' + char_name_file
+def load_enemy_list(file_name):
+    list_to_load = []
+    
+    current_dir = os.getcwd()
+    file_path = current_dir + '/enemies/' + file_name + '.txt'
+    try:
+        file_object = open(file_path, 'r')
         
-        try:
-            char_file_object = open(file_path, 'rb')
-        except IOError:
-            input("Uhh, I've never heard of you stranger? ~Character Not Found~")
-        else:
-            char_found = True
-            
-    player_dic = pickle.load(char_file_object)
-    return player_dic
-
-
+    except IOError:
+        print('ERROR Enemy List Not Found!')
+    
+    else:
+        line_in = file_object.readline()
+        while line_in != '':
+            line_in.rstrip('\n')
+            list_to_load.append(line_in)
+            line_in = file_object.readline()
+        
+    return list_to_load
+       
+    
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def picking_enemy():
-    easy_enemies_list = ['Skeleton', 'Ghast', 'Hobgoblin Captain', 'Bandit Captain']
-    normal_enemies_list = ['Gnoll', 'Werewolf', 'Orog']
-    
-    print("Pick your challenge fighter!")
-    print("(A) Easy Fight")
-    print("(B) Normal Fight")
-    player_diff_choice = input("Your choice: ")
-    valid_answer = False
-    
-    while valid_answer != True: 
-        if player_diff_choice.isalpha() != True:
-            input("~Not a valid choice~")
-            print("Pick your challenge fighter!")
-            print("(A) Easy Fight")
-            print("(B) Normal Fight")
-            player_diff_choice = input("Your choice: ")
-            
-        elif len(player_diff_choice) > 1 or player_diff_choice.upper() < 'A' and player_diff_choice.upper() > 'B':
-            input("~Not a valid choice~")
-            print("Pick your challenge fighter!")
-            print("(A) Easy Fight")
-            print("(B) Normal Fight")
-            player_diff_choice = input("Your choice: ")
-            
-        else:
-           valid_answer = True
-           
-    enemy_found = False
-    enemy_dic = {}
-    while enemy_found != True:
-        if player_diff_choice.upper() == 'A':
-            rand_num = random.randint(0, 3)
-            enemy_name = easy_enemies_list[rand_num]
-            enemy_dic = load_enemy(enemy_name)            
-            
-        elif player_diff_choice.upper() == 'B':
-            rand_num = random.randint(0, 2)
-            enemy_name = normal_enemies_list[rand_num]
-            enemy_dic = load_enemy(enemy_name)            
+ 
+    easy_enemies_list = load_enemy_list('easy_enemies_list')
+    normal_enemies_list = load_enemy_list('normal_enemies_list')
+    if easy_enemies_list == [] or normal_enemies_list == []:
+        print("No Enemies are available to fight!")
+        input("(Please use the Enemy Generator Program to make some enemies!)")
+        enemy_dic = {}
         
-        if enemy_dic != {}:
-            enemy_found = True
+    else:
+        
+        print("Pick your challenge fighter!")
+        print("(A) Easy Fight")
+        print("(B) Normal Fight")
+        player_diff_choice = input("Your choice: ")
+        valid_answer = False
+        
+        while valid_answer != True: 
+            if player_diff_choice.isalpha() != True:
+                input("~Not a valid choice~")
+                print("Pick your challenge fighter!")
+                print("(A) Easy Fight")
+                print("(B) Normal Fight")
+                player_diff_choice = input("Your choice: ")
+                
+            elif len(player_diff_choice) > 1 or player_diff_choice.upper() < 'A' and player_diff_choice.upper() > 'B':
+                input("~Not a valid choice~")
+                print("Pick your challenge fighter!")
+                print("(A) Easy Fight")
+                print("(B) Normal Fight")
+                player_diff_choice = input("Your choice: ")
+                
+            else:
+               valid_answer = True
+               
+        enemy_found = False
+        enemy_dic = {}
+        while enemy_found != True:
+            if player_diff_choice.upper() == 'A':
+                rand_num = random.randint(0, len(easy_enemies_list) - 1)
+                enemy_name = easy_enemies_list[rand_num]
+                enemy_dic = load_enemy(enemy_name)            
+                
+            elif player_diff_choice.upper() == 'B':
+                rand_num = random.randint(0, len(normal_enemies_list) - 1)
+                enemy_name = normal_enemies_list[rand_num]
+                enemy_dic = load_enemy(enemy_name)            
+            
+            if enemy_dic != {}:
+                enemy_found = True
     
     return enemy_dic
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 def load_enemy(enemy_name):
+    enemy_name = enemy_name.rstrip('\n')
     current_dir = os.getcwd()
     file_path = current_dir + '/enemies/' + enemy_name
     input_file_object = open(file_path, 'rb')
@@ -855,7 +907,7 @@ def load_enemy(enemy_name):
         enemy_dic = pickle.load(input_file_object)
         
     except IOError:
-        print("did not work")
+        print("Loading Enemy Failed")
         return
     else:
         return enemy_dic
@@ -924,9 +976,9 @@ def battle_sim (player_dic, enemy_dic):
         if player_defending == True:
             player_dic['AC'] = player_dic['AC'] - DEFEND_BONUS_AC
             player_defending = False
-            print("PLayer's AC: ", player_dic['AC'])
+#            print("PLayer's AC: ", player_dic['AC'])
         
-
+        #Checking to see if fight is over.
         if enemy_dic['max_hp'] <= 0 or player_dic['hp_max'] <= 0:
             fight_over = True        
         
@@ -935,17 +987,17 @@ def battle_sim (player_dic, enemy_dic):
     
 
         else:  
-            player_defending = players_turn(player_dic, enemy_dic) 
+            player_defending = players_turn(player_dic, enemy_dic, enemy_hp_max) 
 
 #////////////////////////////ENEMY'S TURN////////////////////////////////////
 
         if enemy_defending == True:
             enemy_dic['enemy_ac'] = enemy_dic['enemy_ac'] - DEFEND_BONUS_AC
-            print("Enemy AC: ", enemy_dic['enemy_ac'])
+#            print("Enemy AC: ", enemy_dic['enemy_ac'])
             enemy_defending = False            
 
 
-
+        #Checking to see if fight is over.
         if enemy_dic['max_hp'] <= 0 or player_dic['hp_max'] <= 0:
             fight_over = True
             
@@ -981,8 +1033,8 @@ If the d20 roll is a 20 (Nat 20) a critical hit will occur and will double damag
 '''
 
 def attack_func(defender_ac, defender_hp, attacker_dmg_die, attacker_key_mod, attacker_weapon, attack_text):
-    roll_to_hit  = dice_rolls.roll_d20()
-    print('roll to hit: ', roll_to_hit + attacker_key_mod)
+    roll_to_hit = dice_rolls.roll_d20()
+    print('Roll to hit: ', roll_to_hit + attacker_key_mod)
     multiply_attack = 1
     
     if roll_to_hit == 20:
@@ -1006,16 +1058,17 @@ def attack_func(defender_ac, defender_hp, attacker_dmg_die, attacker_key_mod, at
         while count <= num_of_times_to_roll:
             total_damage += roll_die_for_damage(roll_die_list[1])
             count += 1
-       
+            
         #Multiply damage, will be 1x unless its a CRIT!
-        total_damage = multiply_attack * total_damage
-        
-        print('For ', total_damage, ' damage!')
+        total_damage = multiply_attack * (total_damage + attacker_key_mod)
+        damage_text = 'For ' + str(total_damage) + ' damage!'
+        input(damage_text)
             
 #If the roll to hit doesnt pass the defenders AC
     elif roll_to_hit == 1 or roll_to_hit + attacker_key_mod <= defender_ac:
         if roll_to_hit == 1:
             print ("CRITICAL MISS...")
+            input('*woosh* the attack goes wide, and misses!')            
         else:
             input('*woosh* the attack goes wide, and misses!')
         total_damage = 0        
@@ -1090,11 +1143,12 @@ Bolstering your defence for a single turn.
 All includes input validation from the user!
 '''
 
-def players_turn(player_dic, enemy_dic):
+def players_turn(player_dic, enemy_dic, enemy_hp_max):
     
-    input("~~~~~PLAYER'S TURN~~~~~~~~\n")
+    print("~~~~~PLAYER'S TURN~~~~~~~~\n")
     
-    print("Current HP: ", player_dic['hp_max'])
+    print("Current HP: ", player_dic['hp_max'], sep = '')
+#    print(enemy_dic['enemy_name'], "'s HP: ",enemy_dic['max_hp'], sep = '')
     print("(A) ATTACK    or   (B) DEFEND")
     player_choice = input("Your choice: ")
     char_defending = False
@@ -1118,7 +1172,7 @@ def players_turn(player_dic, enemy_dic):
         player_dic['AC'] = defend_func(player_dic['AC'])
         char_defending = True
         defend_string = player_dic['name'] + " turtles up, raising their defense!"
-        print("Defending AC thats BOOSTED: ", player_dic['AC'])
+        #print("Defending AC thats BOOSTED: ", player_dic['AC'])
         input(defend_string)
                 
 
@@ -1137,36 +1191,46 @@ but chooses based on two factors.
 
 def enemy_turn(player_dic, enemy_dic, enemy_max_hp):
 
-    input('~~~~~ENEMIES TURN~~~~~~\n')
+    print('~~~~~ENEMIES TURN~~~~~~\n')
+    status = enemy_hp_condition(enemy_dic['max_hp'], enemy_max_hp, enemy_dic)
+    if status != '':
+        print("Condition: " + status)
+    
+    else:
+        print("Condition: Healthy and Sturdy")
         
+    print('')
+    
     enemy_choosing_num = 0
     char_defending = False
     #If Enemy's HP is higher than 50%
 
 #If Enemy HP is 50% or better than this set of code will occur!
 
-    if enemy_dic['max_hp'] >= round(enemy_dic['max_hp'] * 0.50): #https://www.programiz.com/python-programming/methods/built-in/round 
+    if enemy_dic['max_hp'] >= round(enemy_max_hp * 0.50): #https://www.programiz.com/python-programming/methods/built-in/round 
         enemy_choosing_num = random.randint(1, 4)
         if enemy_choosing_num == 4:
             enemy_dic['enemy_ac'] = defend_func(enemy_dic['enemy_ac'])
             char_defending = True
             defending_text = enemy_dic['enemy_name'] + " turtles up, and raises it's defense!"
-            print("Defending AC thats BOOSTED: ", enemy_dic['enemy_ac'])            
+            #print("Defending AC thats BOOSTED: ", enemy_dic['enemy_ac'])            
             input(defending_text)
         else:
+            print(enemy_dic['enemy_name'] + ' Attacks!\n')
             total_damage = attack_func(player_dic['AC'], player_dic['hp_max'], enemy_dic['enemy_dmg_die'], enemy_dic['enemy_key_mod'], enemy_dic['enemy_weapon'], enemy_dic['enemy_attack_description'])
             player_dic['hp_max'] = player_dic['hp_max'] - total_damage
             
 #If Enemy's HP is below than 50%
-    elif enemy_dic['max_hp'] <= round(enemy_dic['max_hp'] * 0.50): #https://www.programiz.com/python-programming/methods/built-in/round 
+    elif enemy_dic['max_hp'] <= round(enemy_max_hp * 0.50): #https://www.programiz.com/python-programming/methods/built-in/round 
         enemy_choosing_num = random.randint(1, 2)
         if enemy_choosing_num == 2:
             enemy_dic['enemy_ac'] = defend_func(enemy_dic['enemy_ac'])
             char_defending = True
             defending_text = enemy_dic['enemy_name'] + " turtles up, and raises it's defense!"
-            print("Defending AC thats BOOSTED: ", player_dic['AC'])            
+            #print("Defending AC thats BOOSTED: ", player_dic['AC'])            
             input(defending_text)            
         else:
+            print(enemy_dic['enemy_name'] + ' Attacks!\n')            
             total_damage = attack_func(player_dic['AC'], player_dic['hp_max'], enemy_dic['enemy_dmg_die'], enemy_dic['enemy_key_mod'], enemy_dic['enemy_weapon'], enemy_dic['enemy_attack_description'])
             player_dic['hp_max'] = player_dic['hp_max'] - total_damage                
             
@@ -1177,12 +1241,31 @@ def enemy_turn(player_dic, enemy_dic, enemy_max_hp):
         
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~        
 
+def enemy_hp_condition (enemy_current_hp, enemy_max_hp, enemy_dic):
+    status = ''
+    if enemy_current_hp <= round(enemy_max_hp *0.25):
+        status = enemy_dic['quarter_health_description']
+    
+    
+    elif enemy_current_hp <= round(enemy_max_hp *0.50):
+        status = enemy_dic['half_health_description']
+        
+    return status
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        
+    
+
         
 def main():
+    check_folders()
     player_dic = character_selection()
 #    print(player_dic)
     enemy_dic = picking_enemy()
 #    print(enemy_dic)
-    battle_sim(player_dic, enemy_dic)
+    if enemy_dic != {}:
+        battle_sim(player_dic, enemy_dic)
+    else:
+        print('Exited Program Due to no Enemy to fight!')
     
 main()

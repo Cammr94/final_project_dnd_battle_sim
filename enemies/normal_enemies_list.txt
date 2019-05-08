@@ -1,0 +1,4 @@
+Gnoll
+Werewolf
+Orog
+Ettin

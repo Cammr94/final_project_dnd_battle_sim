@@ -1,0 +1,19 @@
+Enemies Difficulty
+
+Easy
+-Skeleton
+-Ghast
+-Hobgoblin Captain
+-Bandit Captain
+
+Normal
+-Gnoll
+-Werewolf
+-Orog
+-Bandit Captain
+
+
+Hard
+-Cyclops
+-Fire Elemental
+-Minotaur

@@ -11,10 +11,46 @@ import random
 import os #https://stackoverflow.com/questions/3430372/how-to-get-full-path-of-current-files-directory-in-python SOURCE
 
 
+def write_to_file():
+    name = input('Name of Enemy: ')
+    file_object = open('test_enemy_list', 'a')
+    file_object.write(name + '\n')
+    file_object.close()
+
+def find_name_in_file_print_list():
+    file_object = open('test_enemy_list', 'r')
+    line_in = file_object.readline()
+    name_list = []
+    
+    if line_in != '':
+        search = input("What name to search for? ")
+        while line_in != '' and line_in != search:
+            name_list.append(line_in.rstrip('\n'))
+            line_in = file_object.readline()
+            line_in = line_in.rstrip('\n')
+            print(line_in)
+        if line_in == search:
+            print('Name is found!')
+        else:
+            print('Not Found!')
+    else:
+        print('List is empty')
+    print(name_list)
+
+def main():
+    #write_to_file()
+    find_name_in_file_print_list()
+        
+    
+    
+main()
+
+
+'''
 word = 'Hello'
 
 print('What is up' + word + 'Whats is up')
-
+'''
 
 
 '''
