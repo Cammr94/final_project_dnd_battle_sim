@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Apr 10 14:08:14 2019
-
-@author: cammr
+Cameron Reading
+Data 119 Python 1
+5/8/2019
+FINAL PROJECT - DnD Battle Sim -Main Program
 """
 
 
@@ -198,6 +199,11 @@ def save_player_char(player_dic):
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+'''
+Will ask the user for a name and then try to look up the name in the 
+character folder and load it properly! For use later!
+'''
+
 def load_character():
     input("Oh its you! Welcome back...")
     input("...uh, remind me...")
@@ -223,7 +229,15 @@ def load_character():
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #SOURCE: https://tecadmin.net/python-check-file-directory-exists/
-    
+
+'''
+Will check to see if the enemy and character folder exist and create it
+if the folder needed!
+
+*Notice* If the enemy folder is just created, then the program will exit
+and prompt user to make enemies using the enemy generator program!
+'''    
+
 def check_folders():
     current_dir = os.getcwd()
     characters_file_path = current_dir + '/characters/'
@@ -822,6 +836,12 @@ def rogue_create (player_dic):
 
 #~~~~~~~~~~~~~~~~~~~~~~END OF CLASS FUNCTIONS~~~~~~~~~~~~~~
 
+'''
+Function that will load a text file that contains all of the name for the
+currently created enemies Normal and Easy for use to determine the 
+random enemy the player will fight!
+'''
+
 def load_enemy_list(file_name):
     list_to_load = []
     
@@ -844,6 +864,12 @@ def load_enemy_list(file_name):
        
     
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+'''
+Looks at list with a random number and call for that enemy and load it's
+dictionary to be used in the battle_sim fight!
+'''
+
 def picking_enemy():
  
     easy_enemies_list = load_enemy_list('easy_enemies_list')
@@ -897,6 +923,12 @@ def picking_enemy():
     
     return enemy_dic
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+'''
+Strips end character off of the enemy name and loads it into the program to 
+be used!
+'''
+
 def load_enemy(enemy_name):
     enemy_name = enemy_name.rstrip('\n')
     current_dir = os.getcwd()
@@ -1240,6 +1272,11 @@ def enemy_turn(player_dic, enemy_dic, enemy_max_hp):
         
         
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~        
+
+'''
+Will print out a condition of the enemy depending on the health of the 
+enemy as it currently stands!
+'''
 
 def enemy_hp_condition (enemy_current_hp, enemy_max_hp, enemy_dic):
     status = ''

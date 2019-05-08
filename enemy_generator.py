@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Apr 27 22:08:42 2019
-
-@author: cammr
+Cameron Reading
+Data 119 Python 1
+5/8/2019
+FINAL PROJECT - DnD Battle Sim -Enemy Generator
 """
 
 import pickle
@@ -12,7 +13,10 @@ import os #https://stackoverflow.com/questions/3430372/how-to-get-full-path-of-c
 
 #Creat Enemies for DnD Sim!
 
-#NEED TO CAST ALL NUMBERS ON ENEMIES TO BE INTS! CAUSES AN ERROR!!!
+'''
+Main Part of the program, will ask user a bunch of questions on info 
+for the enemy in question and save it at the very end appropiately
+'''
 
 def creating_enemy_dic ():
     enemy_dic = {}
@@ -72,10 +76,11 @@ def creating_enemy_dic ():
     return enemy_dic
         
 
-def save_enemy_file (enemy_dic):
-    
+'''
+Will save the newly created enemy dictionary to the apprpiate file!
+'''
 
-    
+def save_enemy_file (enemy_dic):    
     
     current_dir = os.getcwd()
     folder_path = current_dir + '/enemies'
@@ -107,6 +112,8 @@ def save_enemy_file (enemy_dic):
     
     return
 
+#Will take name of enemy to be saved to a text file to be called on later!
+
 def save_name_to_file(enemy_name, file_name):
     current_dir = os.getcwd()
     file_path = current_dir + '/enemies/' + file_name + '.txt.'
@@ -120,8 +127,7 @@ def save_name_to_file(enemy_name, file_name):
     name_to_save = enemy_name + '\n'
     file_object.write(name_to_save)
     
-    return      
-        
+    return         
 
 
 def main():
